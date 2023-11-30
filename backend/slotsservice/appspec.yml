@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+
+
+files:
+  - source: /
+    destination: /home/ec2-user/app
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: root
+    group: root
+
+hooks:
+  AfterInstall:
+    - location: deploy.sh
+      timeout: 300
