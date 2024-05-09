@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+
+  ECSTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: my-task-definition
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt ECSTaskRole.Arn
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: my-container
+          Image: public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3001
+          Environment:
+            - Name: DB_HOST
+              Value: !Ref DBHost
+            - Name: DB_USER
+              Value: !Ref DBUser
+            - Name: DB_PASS
+              Value: !Ref DBPassword
+            - Name: DB_DB
+              Value: !Ref DBDatabase
+            - Name: DB_PORT
+              Value: !Ref DBPort
+            - Name: AWS_REGION
+              Value: !Ref AWSRegion
+            - Name: COGNITO_USER_POOL_ID
+              Value: !Ref CognitoUserPoolId
+            - Name: COGNITO_CLIENT_ID
+              Value: !Ref CognitoClientId
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: Playpal_Usercreation
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: ecs
+
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: MyECSService
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref ECSTaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets: subnet-0708f044a8938f706  # specify your subnet IDs
+          SecurityGroups: sg-0e6b3a491f1baa1b1  # specify your security group IDs
+          AssignPublicIp: ENABLED
