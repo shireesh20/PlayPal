@@ -82,8 +82,7 @@ Resources:
               awslogs-group: Playpal_Usercreation
               awslogs-region: us-east-1
               awslogs-stream-prefix: ecs
-
- ECSService:
+  ECSService:
     Type: AWS::ECS::Service
     Properties:
       ServiceName: cfn-service
