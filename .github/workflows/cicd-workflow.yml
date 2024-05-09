@@ -194,7 +194,7 @@ jobs:
               AWSRegion=us-east-1 \
               CognitoUserPoolId=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
               CognitoClientId=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
-              ImageURL=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
+              ImageURL_UserCreation=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
 
   # deploy-playareastatus:
   #   needs: build-playareastatus
@@ -247,8 +247,7 @@ jobs:
               AWSRegion=us-east-1 \
               AWSAccessKeyID=${{ secrets.AWS_ACCESS_KEY_ID_SHIREESH }} \
               AWSSecretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY_SHIREESH }} \
-              ImageURL=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest \
-              PlayareaStatusImageURL=public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
+              ImageURL_PlayAreaStatus=public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
 
 
   # deploy-frontend:
