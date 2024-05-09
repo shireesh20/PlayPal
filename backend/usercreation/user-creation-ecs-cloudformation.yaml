@@ -83,19 +83,19 @@ Resources:
               awslogs-region: us-east-1
               awslogs-stream-prefix: ecs
 
-ECSService:
-  Type: AWS::ECS::Service
-  Properties:
-    ServiceName: MyECSService
-    Cluster: !Ref ECSCluster
-    TaskDefinition: !Ref ECSTaskDefinition
-    DesiredCount: 1  # Ensure this is an integer
-    LaunchType: FARGATE
-    NetworkConfiguration:
-      AwsvpcConfiguration:
-        Subnets: 
-          - "subnet-0708f044a8938f706"  # Ensure this is a list
-        SecurityGroups: 
-          - "sg-0e6b3a491f1baa1b1"  # Ensure this is a list
-        AssignPublicIp: "ENABLED"
+ ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: cfn-service
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref ECSTaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - subnet-0708f044a8938f706
+          Subnets:
+            - sg-0e6b3a491f1baa1b1
 
