@@ -33,12 +33,12 @@ Parameters:
     Type: String
     Description: Cognito Client ID
 
-  ImageURL_UserCreation:
+  ImageURLUserCreation:
     Type: String
     Default: public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
     Description: Docker image URL for the container
 
-  ImageURL_PlayAreaStatus:
+  ImageURLPlayAreaStatus:
     Type: String
     Default: public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
     Description: Docker image URL for the container
@@ -68,7 +68,7 @@ Resources:
       Memory: "512"
       ContainerDefinitions:
         - Name: my-container
-          Image: !Ref ImageURL
+          Image: !Ref ImageURLUserCreation
           Essential: true
           PortMappings:
             - ContainerPort: 3001
@@ -124,7 +124,7 @@ Resources:
       Memory: "512"
       ContainerDefinitions:
         - Name: playarea-status-container
-          Image: !Ref ImageURL
+          Image: !Ref ImageURLPlayAreaStatus
           Essential: true
           PortMappings:
             - ContainerPort: 3001
