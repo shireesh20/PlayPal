@@ -33,10 +33,23 @@ Parameters:
     Type: String
     Description: Cognito Client ID
 
-  ImageURL:
+  ImageURL_UserCreation:
     Type: String
     Default: public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
     Description: Docker image URL for the container
+
+  ImageURL_PlayAreaStatus:
+    Type: String
+    Default: public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
+    Description: Docker image URL for the container
+
+  AWSAccessKeyID:
+    Type: String
+    Description: ID of the AWS
+
+  AWSSecretAccessKey:
+    Type: String
+    Description: Secret Access Key of AWS
 
 Resources:
   ECSCluster:
@@ -88,6 +101,62 @@ Resources:
       ServiceName: cfn-service
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ECSTaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - sg-0e6b3a491f1baa1b1
+          Subnets:
+            - subnet-0708f044a8938f706
+
+  PlayareaStatusTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: playarea-status-task-definition
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: "arn:aws:iam::429647661750:role/ECSTaskExecutionRole"
+      TaskRoleArn: "arn:aws:iam::429647661750:role/ECSTaskRole"
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: playarea-status-container
+          Image: !Ref ImageURL
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3001
+          Environment:
+            - Name: DB_HOST
+              Value: !Ref DBHost
+            - Name: DB_USER
+              Value: !Ref DBUser
+            - Name: DB_PASS
+              Value: !Ref DBPassword
+            - Name: DB_DB
+              Value: !Ref DBDatabase
+            - Name: DB_PORT
+              Value: !Ref DBPort
+            - Name: AWS_REGION
+              Value: !Ref AWSRegion
+            - Name: AWS_ACCESS_KEY_ID
+              Value: !Ref AWSAccessKeyID
+            - Name: AWS_SECRET_ACCESS_KEY
+              Value: !Ref AWSSecretAccessKey
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: Playpal_PlayAreaStatus
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: ecs
+  PlayareaStatusService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: playarea-status-service
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref PlayareaStatusTaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
       NetworkConfiguration:
