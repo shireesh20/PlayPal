@@ -141,29 +141,60 @@ jobs:
       - name: Run docker container
         run: docker run -d -p 3501:3501 --name playpal-ml -e ACCESSKEYID=${{secrets.ACCESSKEYID}} -e SECRETACCESSKEY=${{secrets.SECRETACCESSKEY}} --log-driver=awslogs --log-opt awslogs-region=us-east-2 --log-opt awslogs-group=Playpal_Mlservice public.ecr.aws/r2n9m4w8/playpal_ml_repo:latest
 
-  deploy-usercreation:
-    needs: build-usercreation
-    runs-on: [self-hosted, backend]
-    steps:
-      - name: Pull image from docker hub
-        run: docker pull public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
-      - name: Delete old container
-        run: docker rm -f playpal-usercreation
-      - name: Run docker container
-        run: |
-          docker run -d -p 3001:3001 --name playpal-usercreation \
-          -e DB_HOST=${{ secrets.DB_HOST }} \
-          -e DB_USER=${{ secrets.DB_USER }} \
-          -e DB_PASSWORD=${{ secrets.DB_PASS }} \
-          -e DB_DATABASE=${{ secrets.DB_DB }} \
-          -e DB_PORT=${{ secrets.DB_PORT }} \
-          -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_SHIREESH }} \
-          -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_SHIREESH }} \
-          -e AWS_REGION=${{ secrets.AWS_REGION }} \
-          -e COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
-          -e COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
-          --log-driver=awslogs --log-opt awslogs-region=us-east-2 --log-opt awslogs-group=Playpal_Usercreation \
-          public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
+  # deploy-usercreation:
+  #   needs: build-usercreation
+  #   runs-on: [self-hosted, backend]
+  #   steps:
+  #     - name: Pull image from docker hub
+  #       run: docker pull public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
+  #     - name: Delete old container
+  #       run: docker rm -f playpal-usercreation
+  #     - name: Run docker container
+  #       run: |
+  #         docker run -d -p 3001:3001 --name playpal-usercreation \
+  #         -e DB_HOST=${{ secrets.DB_HOST }} \
+  #         -e DB_USER=${{ secrets.DB_USER }} \
+  #         -e DB_PASSWORD=${{ secrets.DB_PASS }} \
+  #         -e DB_DATABASE=${{ secrets.DB_DB }} \
+  #         -e DB_PORT=${{ secrets.DB_PORT }} \
+  #         -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_SHIREESH }} \
+  #         -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_SHIREESH }} \
+  #         -e AWS_REGION=${{ secrets.AWS_REGION }} \
+  #         -e COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
+  #         -e COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
+  #         --log-driver=awslogs --log-opt awslogs-region=us-east-2 --log-opt awslogs-group=Playpal_Usercreation \
+  #         public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
+
+deploy-usercreation:
+  needs: build-usercreation
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Deploy CloudFormation stack
+      run: |
+        aws cloudformation deploy \
+          --template-file ../backend/usercreation/user-creation-ecs-cloudformation.yaml \
+          --stack-name my-ecs-stack \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --parameter-overrides \
+            DBHost=${{ secrets.DB_HOST }} \
+            DBUser=${{ secrets.DB_USER }} \
+            DBPassword=${{ secrets.DB_PASS }} \
+            DBDatabase=${{ secrets.DB_DB }} \
+            DBPort=${{ secrets.DB_PORT }} \
+            AWSRegion=us-east-1 \
+            CognitoUserPoolId=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
+            CognitoClientId=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
+            ImageURL=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
 
   deploy-playareastatus:
     needs: build-playareastatus
