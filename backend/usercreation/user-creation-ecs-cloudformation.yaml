@@ -1,4 +1,43 @@
 AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  DBHost:
+    Type: String
+    Description: Database Host URL
+
+  DBUser:
+    Type: String
+    Description: Database Username
+
+  DBPassword:
+    Type: String
+    Description: Database Password
+
+  DBDatabase:
+    Type: String
+    Description: Database Name
+
+  DBPort:
+    Type: String
+    Description: Database Port
+
+  AWSRegion:
+    Type: String
+    Description: AWS Region for the resources
+
+  CognitoUserPoolId:
+    Type: String
+    Description: ID of the Cognito User Pool
+
+  CognitoClientId:
+    Type: String
+    Description: Cognito Client ID
+
+  ImageURL:
+    Type: String
+    Default: public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
+    Description: Docker image URL for the container
+
 Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -16,7 +55,7 @@ Resources:
       Memory: "512"
       ContainerDefinitions:
         - Name: my-container
-          Image: public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
+          Image: !Ref ImageURL
           Essential: true
           PortMappings:
             - ContainerPort: 3001
@@ -54,6 +93,6 @@ Resources:
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
-          Subnets: subnet-0708f044a8938f706  # specify your subnet IDs
-          SecurityGroups: sg-0e6b3a491f1baa1b1  # specify your security group IDs
+          Subnets: subnet-0708f044a8938f706
+          SecurityGroups: sg-0e6b3a491f1baa1b1
           AssignPublicIp: ENABLED
