@@ -182,7 +182,7 @@ jobs:
       - name: Deploy CloudFormation stack
         run: |
           aws cloudformation deploy \
-            --template-file ../backend/usercreation/user-creation-ecs-cloudformation.yaml \
+            --template-file backend/usercreation/user-creation-ecs-cloudformation.yaml \
             --stack-name my-ecs-stack \
             --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides \
