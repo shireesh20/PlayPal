@@ -68,11 +68,11 @@ jobs:
           aws-region: us-east-2
       - name: Login to Amazon ECR
         id: login-ecr
-        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r2n9m4w8
+        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u0t4o1i1
       - name: Build docker image
-        run: docker build -t public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest -f backend/usercreation/Dockerfile backend/usercreation
+        run: docker build -t public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest -f backend/usercreation/Dockerfile backend/usercreation
       - name: Publish image to docker hub
-        run: docker push public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
+        run: docker push public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
 
   build-playareastatus:
     runs-on: [ubuntu-latest]
