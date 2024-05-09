@@ -192,6 +192,9 @@ jobs:
               DBDatabase=${{ secrets.DB_DB }} \
               DBPort=${{ secrets.DB_PORT }} \
               AWSRegion=us-east-1 \
+              AWSAccessKeyID=${{ secrets.AWS_ACCESS_KEY_ID_SHIREESH }} \
+              AWSSecretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY_SHIREESH }} \
+              ImageURLPlayAreaStatus=public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
               CognitoUserPoolId=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
               CognitoClientId=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
               ImageURLUserCreation=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
@@ -248,6 +251,9 @@ jobs:
               AWSAccessKeyID=${{ secrets.AWS_ACCESS_KEY_ID_SHIREESH }} \
               AWSSecretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY_SHIREESH }} \
               ImageURLPlayAreaStatus=public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
+              CognitoUserPoolId=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} \
+              CognitoClientId=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} \
+              ImageURLUserCreation=public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
 
 
   # deploy-frontend:
