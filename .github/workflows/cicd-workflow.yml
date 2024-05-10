@@ -6,7 +6,6 @@ on:
 
 jobs:
   build-event:
-    if: ${{ github.event_name == 'push' && contains(github.event.commits.*.added, 'frontend/') || contains(github.event.commits.*.modified, 'frontend/') }}
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout source
@@ -53,7 +52,6 @@ jobs:
   #       run: docker push public.ecr.aws/r2n9m4w8/playpal_ml_repo:latest
 
   build-usercreation:
-    if: ${{ github.event_name == 'push' && contains(github.event.commits.*.added, 'frontend/') || contains(github.event.commits.*.modified, 'frontend/') }}
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout source
@@ -77,7 +75,6 @@ jobs:
         run: docker push public.ecr.aws/u0t4o1i1/playpal_usercreation_service:latest
 
   build-playareastatus:
-    if: ${{ github.event_name == 'push' && contains(github.event.commits.*.added, 'frontend/') || contains(github.event.commits.*.modified, 'frontend/') }}
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout source
@@ -169,7 +166,6 @@ jobs:
   #         public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
 
   deploy-usercreation:
-    if: ${{ github.event_name == 'push' && contains(github.event.commits.*.added, 'frontend/') || contains(github.event.commits.*.modified, 'frontend/') }}
     needs: [build-usercreation, build-playareastatus, build-event]
     runs-on: ubuntu-latest
     steps:
