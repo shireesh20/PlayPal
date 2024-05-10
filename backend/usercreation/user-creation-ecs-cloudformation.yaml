@@ -41,6 +41,11 @@ Parameters:
   ImageURLPlayAreaStatus:
     Type: String
     Default: public.ecr.aws/u0t4o1i1/playpal_playareastatus_service:latest
+    Description: Docker image URL for the containerImageURLEvent
+
+  ImageURLEvent:
+    Type: String
+    Default: public.ecr.aws/u0t4o1i1/playpal_event_service:latest
     Description: Docker image URL for the container
 
   AWSAccessKeyID:
@@ -127,7 +132,7 @@ Resources:
           Image: !Ref ImageURLPlayAreaStatus
           Essential: true
           PortMappings:
-            - ContainerPort: 3001
+            - ContainerPort: 3002
           Environment:
             - Name: DB_HOST
               Value: !Ref DBHost
@@ -157,6 +162,62 @@ Resources:
       ServiceName: playarea-status-service
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref PlayareaStatusTaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - sg-0e6b3a491f1baa1b1
+          Subnets:
+            - subnet-0708f044a8938f706
+
+  EventTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: event-task-definition
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: "arn:aws:iam::429647661750:role/ECSTaskExecutionRole"
+      TaskRoleArn: "arn:aws:iam::429647661750:role/ECSTaskRole"
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: event-container
+          Image: !Ref ImageURLEvent
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3500
+          Environment:
+            - Name: DB_HOST
+              Value: !Ref DBHost
+            - Name: DB_USER
+              Value: !Ref DBUser
+            - Name: DB_PASS
+              Value: !Ref DBPassword
+            - Name: DB_DB
+              Value: !Ref DBDatabase
+            - Name: DB_PORT
+              Value: !Ref DBPort
+            - Name: AWS_REGION
+              Value: !Ref AWSRegion
+            - Name: ACCESSKEYID
+              Value: !Ref AWSAccessKeyID
+            - Name: SECRETACCESSKEY
+              Value: !Ref AWSSecretAccessKey
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: Playpal_EventService
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: ecs
+  EventService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: event-service
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref EventTaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
       NetworkConfiguration:
