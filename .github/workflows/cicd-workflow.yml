@@ -166,7 +166,7 @@ jobs:
   #         public.ecr.aws/r2n9m4w8/playpal_usercreation_service:latest
 
   deploy-usercreation:
-    needs: [build-usercreation, build-playareastatus]
+    needs: [build-usercreation, build-playareastatus, build-event]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
