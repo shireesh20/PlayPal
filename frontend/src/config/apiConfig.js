@@ -1,8 +1,7 @@
 const apiConfig = {
-    getPlayAreas: 'https://pbh79m29ck.execute-api.us-east-2.amazonaws.com/api/getPlayAreas',
-    registerUser: 'https://api.playpal.live/users/register',
-    updateStatusBaseUrl: 'https://api.playpal.live' 
-  };
-  
-  export default apiConfig;
-  
+  getPlayAreas: "http://52.87.230.127:8080/api/getPlayAreas",
+  registerUser: "http://34.232.76.200:3001/users/register",
+  updateStatusBaseUrl: "http://54.160.116.219:3002",
+};
+
+export default apiConfig;
