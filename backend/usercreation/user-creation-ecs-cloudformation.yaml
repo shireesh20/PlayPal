@@ -82,9 +82,9 @@ Resources:
               Value: !Ref DBHost
             - Name: DB_USER
               Value: !Ref DBUser
-            - Name: DB_PASS
+            - Name: DB_PASSWORD
               Value: !Ref DBPassword
-            - Name: DB_DB
+            - Name: DB_DATABASE
               Value: !Ref DBDatabase
             - Name: DB_PORT
               Value: !Ref DBPort
@@ -138,9 +138,9 @@ Resources:
               Value: !Ref DBHost
             - Name: DB_USER
               Value: !Ref DBUser
-            - Name: DB_PASS
+            - Name: DB_PASSWORD
               Value: !Ref DBPassword
-            - Name: DB_DB
+            - Name: DB_DATABASE
               Value: !Ref DBDatabase
             - Name: DB_PORT
               Value: !Ref DBPort
