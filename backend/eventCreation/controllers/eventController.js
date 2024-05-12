@@ -48,25 +48,8 @@ const getAllNotes = async (req, res) => {
       event.players = playersArrays[index];
     });
     const sports = await queryAsync("select name from sports;");
-    // const apiUrl = 'https://api.playpal.live/predict'; // Replace with your actual API URL
-
-    // async function fetchData() {
-    //   try {
-    //     // console.log(`${apiUrl}/`+userId[0].id);
-    //     const response = await axios.get(`${apiUrl}/`+userId[0].id);
-
-    //     // console.log('Response:', response.data.body[0]);
-    //     const temp = response.data.body[0];
-    //     res.json({result,sports,temp});
-    //     // Further processing with the response data can be done here
-
-    //   } catch (error) {
-    //     console.error('Error:', error.message);
-    //   }
-    // }
-
-    // // Inside an async function or event handler
-    // await fetchData();
+    console.log("AShish Hawala")
+    console.log({ result, sports })
     res.json({ result, sports });
   } catch (error) {
     console.log(error);
