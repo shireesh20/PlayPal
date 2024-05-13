@@ -48,8 +48,8 @@ const getAllNotes = async (req, res) => {
       event.players = playersArrays[index];
     });
     const sports = await queryAsync("select name from sports;");
-    console.log("AShish Hawala")
-    console.log({ result, sports })
+    console.log("AShish ");
+    console.log({ result, sports });
     res.json({ result, sports });
   } catch (error) {
     console.log(error);
@@ -239,19 +239,15 @@ const joinEvent = async (req, res) => {
       console.log("Email sent:", data);
     } catch (error) {
       console.error("Error sending email:", error);
-      res
-        .status(200)
-        .json({
-          message: "Successfully requested to join the event, will join the event once the host accepts the request",
-        });
+      res.status(200).json({
+        message: "Successfully requested to join the event, will join the event once the host accepts the request",
+      });
       throw error;
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Successfully requested to join the event, will join the event once the host accepts the request",
-      });
+    res.status(200).json({
+      message: "Successfully requested to join the event, will join the event once the host accepts the request",
+    });
   } catch (err) {
     console.log(err);
   }
