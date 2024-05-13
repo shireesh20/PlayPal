@@ -48,7 +48,7 @@ const getAllNotes = async (req, res) => {
       event.players = playersArrays[index];
     });
     const sports = await queryAsync("select name from sports;");
-    console.log("AShish ");
+    console.log("AShish  ");
     console.log({ result, sports });
     res.json({ result, sports });
   } catch (error) {
